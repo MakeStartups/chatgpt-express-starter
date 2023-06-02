@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Online Feedback Form</title>
+		<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600' rel='stylesheet' type='text/css'>
+		<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+		<link href="/css/styles.css" rel="stylesheet">
+		<style>
+			
+		</style>
+	</head>
+	<body>
+		<div class="testbox">
+			<form action="#" id="ai_form">
+				<h1>ChatGPT AI Starter Kit</h1>
+				<p>This Express app provides a simple interface to experiment with ChatGPT and build new applications. Consider this a "playground" for development.</p>
+				<h4>Send to ChatGPT</h4>
+				<textarea id="ai_input" name="ai_input" rows="5"></textarea>
+				<div class="btn-block">
+					<input type="button" id="loadChat" value="Load ChatGPT Response">
+				</div>
+			</form>
+
+			<div id="ai_response" class="hidden"></div>
+		</div>
+
+		<script type="text/javascript">
+			document.getElementById('loadChat').addEventListener('click', async (ev) => {
+				ev.preventDefault();
+
+				let input = document.getElementById('ai_input').value;
+
+				document.getElementById('loadChat').disabled = true;
+				document.getElementById('loadChat').value = 'Submitted...';
+
+				document.getElementById('ai_response').classList.remove('hidden');
+				document.getElementById('ai_response').innerText = 'Thinking...';
+
+				fetch('/chat', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({ 'ai_input': input  })
+				}).then(response => response.json()).then(response => {
+					console.log(response);
+					document.getElementById('ai_response').innerText = response.ai_output;
+					document.getElementById('loadChat').disabled = false;
+					document.getElementById('loadChat').value = 'Load ChatGPT Response';
+				});
+			});
+		</script>
+	</body>
+</html>
